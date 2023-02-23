@@ -98,7 +98,7 @@ public class Real_Test_Example : MonoBehaviour
     private Thread thread = null;
     private IPEndPoint endPoint;
 
-    public string UDP_IP = "192.168.1.15";
+    public string UDP_IP = "127.0.0.1";
     public int UDP_PORT = 7810;
     public Action<string> receiveMsg = null;
     public string receiveString = null;
@@ -115,12 +115,10 @@ public class Real_Test_Example : MonoBehaviour
     void Start()
     {
         //SerialPort_Neuroscan(0);
-        //thread = new Thread(ReceiveMsg);
-        //thread.Start();
+        Thread Feedback_thread = new Thread(new ThreadStart(ReceiveMsg));
+        Feedback_thread.Start();
 
-        //server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        //server.Bind(new IPEndPoint(IPAddress.Parse(UDP_IP), UDP_PORT));//绑定端口号和IP
-        //Debug.Log("服务端已经开启");
+
 
         //sp = new SerialPort(portName, baudRate)
         //{
@@ -144,7 +142,7 @@ public class Real_Test_Example : MonoBehaviour
         IC_Text.GetComponent<Text>().text = "+";
         IC_Text.GetComponent<Text>().font = BuildInFont;
         IC_Text.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
-        IC_Text.GetComponent<Text>().fontSize = 100;
+        IC_Text.GetComponent<Text>().fontSize = 50;
         IC_Text.GetComponent<Text>().color = Color.red;
         IC_Text.GetComponent<Text>().transform.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
         IC_Text.GetComponent<Text>().transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
@@ -346,7 +344,6 @@ public class Real_Test_Example : MonoBehaviour
                         Sti_command[j].GetComponent<Image>().color = new Color(gray_value, gray_value, gray_value, 255f);
                         Text_command[j].SetActive(true);
                         Text_cross[j].SetActive(true);
-                        Text_feedback[j].SetActive(false);
                     }
                     time_sti += Time.deltaTime;
                 }   
@@ -471,7 +468,7 @@ public class Real_Test_Example : MonoBehaviour
             Text_cross[i].GetComponent<Text>().transform.GetComponent<RectTransform>().sizeDelta = new Vector2(Sti_size, Sti_size);
             //刺激闪烁反馈提示绿色球
             Text_feedback[i].GetComponent<Text>().transform.GetComponent<RectTransform>().sizeDelta = new Vector2(Sti_size, Sti_size);
-            Text_feedback[i].GetComponent<Text>().transform.GetComponent<RectTransform>().localPosition = new Vector3(0, -Sti_size/ 2, 0);
+            Text_feedback[i].GetComponent<Text>().transform.GetComponent<RectTransform>().localPosition = new Vector3(0, -Sti_size/ 2-10, 0);
         }
         //动态刺激方块覆盖问题解决
         if (Sti_num < lastNumSti)
@@ -589,21 +586,27 @@ public class Real_Test_Example : MonoBehaviour
     //接受在线反馈指令，显示绿色提示球
     private void ReceiveMsg()
     {
+        Debug.Log(UDP_IP);
+        server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        server.Bind(new IPEndPoint(IPAddress.Parse(UDP_IP), UDP_PORT));//绑定端口号和IP
+        Debug.Log("服务端已经开启");
         while (true)
         {
-            Debug.Log("Result:" + Result);
-            EndPoint point = new IPEndPoint(IPAddress.Any, 0);//用来保存发送方的ip和端口号
-            byte[] buffer = new byte[1024];
-            int length = server.ReceiveFrom(buffer, ref point);//接收数据报
-            Debug.Log("阻塞");
-            string message = Encoding.UTF8.GetString(buffer, 0, length);
-            Result = Int32.Parse(message) - 1;
-
-            if ((Result >= 0 && Result <= 34) || (Result == 39))
+            try
             {
-                break;
-            }
+                Debug.Log("Result:" + Result);
+                EndPoint point = new IPEndPoint(IPAddress.Any, 0);//用来保存发送方的ip和端口号
+                byte[] buffer = new byte[1024];
+                int length = server.ReceiveFrom(buffer, ref point);//接收数据报
 
+                Debug.Log("阻塞");
+                string message = Encoding.UTF8.GetString(buffer, 0, length);
+                Result = Int32.Parse(message) - 1;
+            }
+            catch
+            {
+                server.Close();
+            }
         }
     }
 }
