@@ -402,6 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sti_name:
+  - Right
   - CW
   - TakeOff
   - Forward
@@ -411,8 +412,6 @@ MonoBehaviour:
   - Down
   - Back
   - Land
-  - Right
-  - IC
   Sti_fre:
   - 8
   - 8.5
@@ -437,8 +436,8 @@ MonoBehaviour:
   - 3.15
   - 3.5
   - 0
-  Sti_coordinate_X: 0d0200004501000000000000bbfefffff3fdfffff3fdffffbbfeffff00000000450100000d02000000000000
-  Sti_coordinate_Y: 7d0000005e0100005e0100005e0100007d00000083ffffffa2feffffa2feffffa2feffff83ffffff00000000
+  Sti_coordinate_X: 0d0200000d0200004501000000000000bbfefffff3fdfffff3fdffffbbfeffff000000004501000000000000
+  Sti_coordinate_Y: 83ffffff7d0000005e0100005e0100005e0100007d00000083ffffffa2feffffa2feffffa2feffff00000000
   Sti_size: 120
   Sti_screen:
   - 
@@ -467,7 +466,7 @@ MonoBehaviour:
   offline_time_cue: 1
   offline_sti_fragment: 1
   offline_sti_round: 4
-  stionline_sti_fragment: 10
+  stionline_sti_fragment: 5
   stionline_sti_round: 2
   online_time_cue: 0
   online_sti_fragment: 1
@@ -480,6 +479,7 @@ MonoBehaviour:
   Online_flag: 0
   Time_readJson: 0
   Sti_Camera: {fileID: 0}
+  IC_Text: {fileID: 0}
   Sti_command:
   - {fileID: 0}
   - {fileID: 0}
@@ -535,6 +535,6 @@ MonoBehaviour:
   portName: COM8
   baudRate: 115200
   bit: 
-  UDP_IP: 192.168.1.15
+  UDP_IP: 127.0.0.1
   UDP_PORT: 7810
   receiveString: 
